@@ -202,16 +202,17 @@ export default function Home() {
         </p>
       )}
 
+      {body && !item && body.id === "earth" && (
+        <p className="pointer-events-none absolute left-0 right-0 top-24 z-10 px-6 text-center text-sm font-semibold leading-snug text-white/90 md:text-base">
+          {t.earthEquipmentReminder}
+        </p>
+      )}
+
       {body && !item && (
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 flex items-end justify-between gap-4 p-6 text-white md:p-10">
           <div className="max-w-lg bg-black/70 p-5">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{body.name}</h1>
             <p className="mt-2 text-white/80">{body.tagline}</p>
-            {body.id === "earth" && (
-              <p className="mt-3 max-w-md text-sm font-medium leading-snug text-white/85">
-                {t.earthEquipmentReminder}
-              </p>
-            )}
             {body.equipment?.length > 0 && (
               <p className="mt-3 text-sm text-white/70">
                 {body.id === "mars"
