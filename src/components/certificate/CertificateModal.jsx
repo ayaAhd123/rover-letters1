@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { toPng } from "html-to-image";
 import MemoryKeeperCertificate from "@/components/certificate/MemoryKeeperCertificate";
 import {
   CERT_BASE_FONT_PX,
@@ -16,6 +15,43 @@ import {
   machineIds,
   useProgress,
 } from "@/state/progress";
+
+async function exportCertificatePng(node, { width, height, pixelRatio = 3 }) {
+  const clone = node.cloneNode(true);
+  const rules = [];
+  for (const sheet of document.styleSheets) {
+    try {
+      for (const rule of sheet.cssRules) {
+        if (rule.selectorText?.includes(".mk-")) rules.push(rule.cssText);
+      }
+    } catch {
+      /* cross-origin stylesheet */
+    }
+  }
+  const wrapper = document.createElement("div");
+  wrapper.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+  wrapper.style.cssText = `width:${width}px;height:${height}px;margin:0`;
+  const style = document.createElement("style");
+  style.textContent = rules.join("\n");
+  wrapper.append(style, clone);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width * pixelRatio}" height="${height * pixelRatio}"><foreignObject width="${width}" height="${height}" transform="scale(${pixelRatio})">${new XMLSerializer().serializeToString(wrapper)}</foreignObject></svg>`;
+  const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+  try {
+    const img = await new Promise((ok, err) => {
+      const i = new Image();
+      i.onload = () => ok(i);
+      i.onerror = err;
+      i.src = url;
+    });
+    const canvas = document.createElement("canvas");
+    canvas.width = width * pixelRatio;
+    canvas.height = height * pixelRatio;
+    canvas.getContext("2d").drawImage(img, 0, 0);
+    return canvas.toDataURL("image/png");
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
 
 export default function CertificateModal({ open, onClose }) {
   const { completedMachines, ready } = useProgress();
@@ -106,9 +142,8 @@ export default function CertificateModal({ open, onClose }) {
     if (!node || !personalized || !childName.trim()) return;
     setDownloading(true);
     try {
-      const dataUrl = await toPng(node, {
+      const dataUrl = await exportCertificatePng(node, {
         pixelRatio: 1,
-        cacheBust: true,
         width: CERT_EXPORT_WIDTH,
         height: CERT_EXPORT_HEIGHT,
       });

@@ -9,7 +9,7 @@ const RISE_SPEED = 0.42;
 const FALL_SPEED = 0.18;
 const OFF_TOP = 0.98;
 
-export default function SpinUpLevel({ onDone, onSay, reduceMotion, coachCaption = "" }) {
+export default function SpinUpLevel({ onDone, onSay, reduceMotion }) {
   const riseSpeed = reduceMotion ? 0.55 : RISE_SPEED;
 
   const [alt, setAlt] = useState(0);
@@ -134,19 +134,7 @@ export default function SpinUpLevel({ onDone, onSay, reduceMotion, coachCaption 
         </div>
       </div>
 
-      <div className="ginny-takeoff-hud-top pointer-events-none">
-        <p className="ginny-spot-pill">{pickText(SPIN.takeoffIntro)}</p>
-        <p className="ginny-spot-hint">{pickText(SPIN.goalHint)}</p>
-        {coachCaption ? (
-          <p className="ginny-spot-caption" aria-live="polite">
-            {coachCaption}
-          </p>
-        ) : null}
-        <p className="ginny-spot-hint text-sm">{pickText(SPIN.tapHint)}</p>
-      </div>
-
       <div className="ginny-takeoff-hud-bottom pointer-events-auto">
-        <p className="mb-2 text-center text-sm font-bold text-white/90">{pickText(SPIN.holdCount)}…</p>
         <div className="flex justify-center">
           <button
             type="button"

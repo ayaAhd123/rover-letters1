@@ -139,7 +139,6 @@ export default function ScoutGame({ machineId = "ingenuity", onExit, onBackToSto
               onDone={onSpinDone}
               onSay={(text, worried) => say(text, worried ? "sad" : "happy", worried ? "droop" : "fly")}
               reduceMotion={reduceMotion}
-              coachCaption={caption}
             />
           )}
 
@@ -149,7 +148,6 @@ export default function ScoutGame({ machineId = "ingenuity", onExit, onBackToSto
               debugHazards={debugHazards}
               reduceMotion={reduceMotion}
               onStepChange={setRoadStep}
-              coachCaption={level2FullPhoto ? caption : ""}
               onSay={(text, worried) => say(text, worried ? "scared" : "happy", worried ? "shock" : "fly")}
               onComplete={(stats) => {
                 setResult(stats);

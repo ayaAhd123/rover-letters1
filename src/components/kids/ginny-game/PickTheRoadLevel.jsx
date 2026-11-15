@@ -2,8 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  COACH,
-  LEGEND,
   ROAD,
   SCOUT_AERIAL_SIZE,
   firstPathHazardHit,
@@ -31,7 +29,6 @@ export default function PickTheRoadLevel({
   debugHazards,
   reduceMotion,
   onStepChange,
-  coachCaption = "",
 }) {
   const [step, setStep] = useState("spot");
   const [found, setFound] = useState([]);
@@ -258,26 +255,16 @@ export default function PickTheRoadLevel({
         {mapSvgContent}
       </svg>
 
-      <aside className="ginny-spot-hud-side" aria-label={stageLabel}>
+      <div className="ginny-spot-hud-bottom pointer-events-auto" aria-label={stageLabel}>
         {step === "spot" ? (
-          <>
-            <p className="ginny-spot-pill">{pickText(ROAD.spotTitle)}</p>
-            <p className="ginny-spot-hint">{pickText(ROAD.spotHint)}</p>
-            <p className="ginny-spot-why">{pickText(ROAD.spotWhy)}</p>
-            <ul className="ginny-spot-legend" aria-label={pickText(LEGEND.title)}>
-              {LEGEND.items.map((item) => (
-                <li key={item.type}>
-                  {pickText(item.label)} — {pickText(item.desc)}
-                </li>
-              ))}
-            </ul>
-            <p className="ginny-spot-counter">
-              {pickText(ROAD.counter)}: {found.length}/{map.hazards.length}
+          <div className="ginny-spot-hud-bottom-inner">
+            <p className="ginny-spot-counter mb-2 text-center">
+              {found.length}/{map.hazards.length}
             </p>
             <button
               type="button"
               disabled={!canContinueSpot}
-              className="kids-btn kids-btn-primary ginny-spot-continue min-h-12 w-full"
+              className="kids-btn kids-btn-primary min-h-12 w-full max-w-md"
               onClick={() => {
                 setStep("draw");
                 scheduleSay(pickText(ROAD.drawHint));
@@ -285,14 +272,12 @@ export default function PickTheRoadLevel({
             >
               {pickText(ROAD.continueSpot)}
             </button>
-          </>
+          </div>
         ) : (
-          <>
-            <p className="ginny-spot-pill">{pickText(ROAD.drawTitle)}</p>
-            <p className="ginny-spot-hint">{driving ? pickText(COACH.drive.simple) : pickText(ROAD.drawHint)}</p>
+          <div className="ginny-spot-hud-bottom-inner ginny-spot-hud-bottom-inner--row">
             <button
               type="button"
-              className="kids-btn kids-btn-ghost ginny-spot-continue min-h-12 w-full"
+              className="kids-btn kids-btn-ghost min-h-12 min-w-[7rem] flex-1"
               disabled={waypoints.length < 2 || driving}
               onClick={() => waypoints.length > 1 && setWaypoints((w) => w.slice(0, -1))}
             >
@@ -300,7 +285,7 @@ export default function PickTheRoadLevel({
             </button>
             <button
               type="button"
-              className="kids-btn kids-btn-primary ginny-spot-continue min-h-12 w-full"
+              className="kids-btn kids-btn-primary min-h-12 min-w-[7rem] flex-1"
               disabled={waypoints.length < 2 || driving}
               onClick={() => {
                 setStep("drive");
@@ -309,14 +294,9 @@ export default function PickTheRoadLevel({
             >
               {pickText(ROAD.drive)}
             </button>
-          </>
+          </div>
         )}
-        {coachCaption ? (
-          <p className="ginny-spot-caption" aria-live="polite">
-            {coachCaption}
-          </p>
-        ) : null}
-      </aside>
+      </div>
     </div>
   );
 }

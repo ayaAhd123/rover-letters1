@@ -2991,31 +2991,27 @@
   pointer-events: auto;
 }
 
-.ginny-spot-hud-side {
+.ginny-spot-hud-bottom {
   position: absolute;
-  top: 0;
+  left: 0;
   right: 0;
   bottom: 0;
   z-index: 2;
+  padding: 0.65rem 0.75rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(26, 12, 8, 0.88) 0%, rgba(26, 12, 8, 0.45) 70%, transparent 100%);
+}
+
+.ginny-spot-hud-bottom-inner {
+  margin: 0 auto;
+  width: min(24rem, 100%);
+}
+
+.ginny-spot-hud-bottom-inner--row {
   display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  width: min(17.5rem, 40vw);
-  max-width: calc(100% - 3rem);
-  padding: 4.25rem 0.65rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
-  overflow-y: auto;
-  overflow-x: hidden;
-  pointer-events: auto;
-  text-align: left;
-  background: linear-gradient(
-    to left,
-    rgba(26, 12, 8, 0.92) 0%,
-    rgba(26, 12, 8, 0.78) 55%,
-    rgba(26, 12, 8, 0.35) 85%,
-    transparent 100%
-  );
-  border-left: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(4px);
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .ginny-spot-pill {
@@ -3055,30 +3051,6 @@
   flex-shrink: 0;
 }
 
-@media (max-width: 480px) {
-  .ginny-spot-hud-side {
-    top: auto;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    max-width: none;
-    max-height: min(52dvh, 22rem);
-    padding: 0.65rem 0.75rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    background: linear-gradient(
-      to top,
-      rgba(26, 12, 8, 0.95) 0%,
-      rgba(26, 12, 8, 0.82) 65%,
-      rgba(26, 12, 8, 0.4) 100%
-    );
-  }
-
-  .ginny-spot-continue {
-    margin-top: 0.35rem;
-  }
-}
 
 .ginny-hazard-blink {
   animation: ginny-hblink 0.5s ease-in-out 4;

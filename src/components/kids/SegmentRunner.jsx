@@ -8,7 +8,6 @@ import Viking from "@/components/kids/Viking";
 import MediaPanel from "@/components/kids/MediaPanel";
 import SegmentQuestion from "@/components/kids/SegmentQuestion";
 import MissionGame from "@/components/kids/MissionGame";
-import ScoutGame from "@/components/kids/ginny-game/ScoutGame";
 import { useKidsVoice } from "@/hooks/useKidsVoice";
 import { useKidsProgress } from "@/context/KidsProgressContext";
 import { useDeepDive } from "@/components/deepdive/DeepDiveContext";
@@ -363,16 +362,19 @@ export default function SegmentRunner({ machine, onExit }) {
         </div>
       );
     }
-    if (machine.id === "ingenuity") {
+    if (machine.id === "opportunity" || machine.id === "ingenuity") {
       return (
-        <ScoutGame
+        <MissionGame
           machineId={machine.id}
           onExit={onExit}
-          skipIntro={skipGameIntro}
-          onBackToStory={() => {
-            setSkipGameIntro(false);
-            setPhase("invite");
-          }}
+          onBackToStory={
+            machine.id === "ingenuity"
+              ? () => {
+                  setSkipGameIntro(false);
+                  setPhase("invite");
+                }
+              : undefined
+          }
         />
       );
     }

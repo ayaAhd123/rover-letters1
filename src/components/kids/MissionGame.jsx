@@ -5,17 +5,57 @@
 // All content lives in src/data/missionGame.js. No AI: tiles are checked against the data.
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import Opportunity, { PARTS, PartIcon } from "./Opportunity";
+import Opportunity, { PARTS as OPP_PARTS, PartIcon as OppPartIcon } from "./Opportunity";
+import Ingenuity, { PARTS as ING_PARTS, PartIcon as IngPartIcon } from "./Ingenuity";
 import {
-  COMPANION, BUILD, LAUNCH, LOOK_PINS, LOOK_PROMPT, MISSIONS, BOARD, CLAIM, CHALLENGE, SIGN, LETTER, UI,
+  COMPANION as OPP_COMPANION,
+  BUILD as OPP_BUILD,
+  LAUNCH,
+  LOOK_PINS,
+  LOOK_PROMPT,
+  MISSIONS,
+  BOARD,
+  CLAIM,
+  CHALLENGE,
+  SIGN,
+  LETTER,
+  UI as OPP_UI,
 } from "../../data/missionGame";
+import {
+  COMPANION as ING_COMPANION,
+  BUILD as ING_BUILD,
+  UI as ING_UI,
+} from "../../data/ingenuityBuildGame";
 import { useProgress } from "@/state/progress";
 import { useSpaceAudio } from "@/hooks/useSpaceAudio";
 
 const FONT = '"Baloo 2", "Nunito", ui-rounded, system-ui, sans-serif';
 const T = { sky: "#0e1a38", navy: "#1d3f78", cream: "#fffaf3", gold: "#f0c14a", ink: "#3a2a24", bad: "#e0603f" };
-const TRAY_ORDER = ["camera", "wheels", "antenna", "arm", "panels"];
-const SLOT_AT = { arm: [102, 252], wheels: [98, 304] }; // nudged apart so the dotted circles never overlap
+
+const MACHINE_BUILD = {
+  opportunity: {
+    Character: Opportunity,
+    PARTS: OPP_PARTS,
+    PartIcon: OppPartIcon,
+    BUILD: OPP_BUILD,
+    COMPANION: OPP_COMPANION,
+    UI: OPP_UI,
+    trayOrder: ["camera", "wheels", "antenna", "arm", "panels"],
+    slotAt: { arm: [102, 252], wheels: [98, 304] },
+    canvas: { w: 400, h: 340 },
+  },
+  ingenuity: {
+    Character: Ingenuity,
+    PARTS: ING_PARTS,
+    PartIcon: IngPartIcon,
+    BUILD: ING_BUILD,
+    COMPANION: ING_COMPANION,
+    UI: ING_UI,
+    trayOrder: ["blades", "solar", "antenna", "avionics", "sensors", "batteries", "legs"],
+    slotAt: { sensors: [192, 208], batteries: [118, 238] },
+    canvas: { w: 400, h: 340 },
+  },
+};
 
 const STEPS = [
   ...MISSIONS.flatMap((m) => [
@@ -45,7 +85,7 @@ function useSpeaker(initial = "") {
   return { text, talking, say };
 }
 
-function Companion({ text }) {
+function Companion({ text, companion }) {
   const listen = () => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
@@ -57,7 +97,7 @@ function Companion({ text }) {
         className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full text-xl font-bold"
         style={{ background: T.gold, color: T.ink, border: `3px solid ${T.ink}` }}
       >
-        {COMPANION.image ? <img src={COMPANION.image} alt={COMPANION.name} className="h-full w-full object-cover" /> : COMPANION.name[0]}
+        {companion.image ? <img src={companion.image} alt={companion.name} className="h-full w-full object-cover" /> : companion.name[0]}
       </div>
       <div className="rounded-2xl px-4 py-3" style={{ background: T.cream, color: T.ink }}>
         <p aria-live="polite" className="text-lg leading-snug">{text}</p>
@@ -89,9 +129,9 @@ function Notebook({ notes, large = false }) {
       className={`rounded-2xl p-5 ${large ? "" : "md:sticky md:top-4"}`}
       style={{ background: `repeating-linear-gradient(${T.cream} 0 35px, #dcd3c4 35px 36px)`, color: T.ink, border: `3px solid ${T.ink}` }}
     >
-      <h3 className="mb-2 text-xl font-bold">{UI.notebookTitle}</h3>
+      <h3 className="mb-2 text-xl font-bold">{OPP_UI.notebookTitle}</h3>
       {notes.length === 0 ? (
-        <p className="text-base opacity-70">{UI.notebookEmpty}</p>
+        <p className="text-base opacity-70">{OPP_UI.notebookEmpty}</p>
       ) : (
         <ul className="grid gap-2">
           {notes.map((n, k) => (
@@ -285,16 +325,19 @@ function Photo({ src, alt, credit, pins = [], onPin, fit }) {
   );
 }
 
-// ---------- phase 1: build ----------
-function Build({ log, onDone }) {
+// ---------- build: place parts + quiz (Opportunity & Ingenuity) ----------
+function Build({ log, onDone, config }) {
+  const { Character, PARTS, PartIcon, BUILD, COMPANION, trayOrder, slotAt, canvas } = config;
+  const canvasW = canvas.w;
+  const canvasH = canvas.h;
   const [assembled, setAssembled] = useState([]);
   const [selected, setSelected] = useState(null);
   const [pose, setPose] = useState(null);
-  const [quiz, setQuiz] = useState(null); // { id, solved } while a part question is open
-  const [misses, setMisses] = useState(0); // wrong spots tried for the selected part
+  const [quiz, setQuiz] = useState(null);
+  const [misses, setMisses] = useState(0);
   const { text, talking, say } = useSpeaker(BUILD.intro);
 
-  const missing = TRAY_ORDER.filter((id) => !assembled.includes(id));
+  const missing = trayOrder.filter((id) => !assembled.includes(id));
   const complete = missing.length === 0 && !quiz;
   const labelOf = (id) => PARTS.find((p) => p.id === id).label;
 
@@ -322,13 +365,13 @@ function Build({ log, onDone }) {
 
   return (
     <div className="grid gap-6">
-      <Companion text={text} />
+      <Companion text={text} companion={COMPANION} />
       <div className="grid items-center gap-6 md:grid-cols-[1fr_300px]">
         <div className="relative mx-auto w-full max-w-[560px]">
-          <Opportunity talking={talking} mood="happy" pose={complete ? "wave" : pose} assembled={assembled} followPointer={false} />
+          <Character talking={talking} mood="happy" pose={complete ? "wave" : pose} assembled={assembled} followPointer={false} />
           {missing.map((id) => {
-            const [cx, cy] = SLOT_AT[id] || PARTS.find((x) => x.id === id).center;
-            const reveal = selected === id && misses >= 3; // after 3 wrong tries, glow the right spot
+            const [cx, cy] = slotAt[id] || PARTS.find((x) => x.id === id).center;
+            const reveal = selected === id && misses >= 3;
             return (
               <button
                 key={id}
@@ -337,8 +380,8 @@ function Build({ log, onDone }) {
                 onClick={() => place(id)}
                 className={`absolute aspect-square w-[11%] min-w-[44px] -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-dashed ${selected ? "motion-safe:animate-pulse" : ""}`}
                 style={{
-                  left: `${(cx / 400) * 100}%`,
-                  top: `${(cy / 340) * 100}%`,
+                  left: `${(cx / canvasW) * 100}%`,
+                  top: `${(cy / canvasH) * 100}%`,
                   borderColor: reveal || selected ? T.gold : "#ffffff77",
                   background: reveal ? "#f0c14a44" : "transparent",
                 }}
@@ -357,10 +400,14 @@ function Build({ log, onDone }) {
                 label={`Part: ${labelOf(quiz.id)}`}
                 onSolved={() => setQuiz((s) => ({ ...s, solved: true }))}
               />
-              {quiz.solved && <div ref={reveal}><BigButton onClick={cont}>{BUILD.nextPart}</BigButton></div>}
+              {quiz.solved && (
+                <div ref={reveal}>
+                  <BigButton onClick={cont}>{BUILD.nextPart}</BigButton>
+                </div>
+              )}
             </>
           ) : complete ? (
-            <BigButton onClick={onDone}>{BUILD.launchButton}</BigButton>
+            <BigButton onClick={onDone}>{BUILD.finishButton}</BigButton>
           ) : (
             <div className="grid grid-cols-3 gap-3 md:grid-cols-2">
               {missing.map((id) => (
@@ -377,7 +424,9 @@ function Build({ log, onDone }) {
                   style={{ background: T.cream, border: `4px solid ${selected === id ? T.gold : T.ink}`, outlineColor: T.gold }}
                 >
                   <PartIcon part={id} size={84} />
-                  <span className="mt-1 text-base font-bold" style={{ color: T.ink }}>{labelOf(id)}</span>
+                  <span className="mt-1 text-base font-bold" style={{ color: T.ink }}>
+                    {labelOf(id)}
+                  </span>
                 </button>
               ))}
             </div>
@@ -613,45 +662,35 @@ function Report({ data, stats, onReplay, onExit }) {
         </p>
       </div>
       <div className="flex flex-wrap gap-3">
-        <BigButton onClick={() => window.print()}>{UI.print}</BigButton>
-        <BigButton onClick={onReplay}>{UI.replay}</BigButton>
-        {onExit && <BigButton onClick={onExit}>{UI.exit}</BigButton>}
+        <BigButton onClick={() => window.print()}>{OPP_UI.print}</BigButton>
+        <BigButton onClick={onReplay}>{OPP_UI.replay}</BigButton>
+        {onExit && <BigButton onClick={onExit}>{OPP_UI.exit}</BigButton>}
       </div>
     </div>
   );
 }
 
 // ---------- main ----------
-export default function MissionGame({ machineId, onExit }) {
+export default function MissionGame({ machineId, onExit, onBackToStory }) {
+  const config = MACHINE_BUILD[machineId] ?? MACHINE_BUILD.opportunity;
+  const { UI } = config;
   const { completeMachine } = useProgress();
   const { playMissionComplete } = useSpaceAudio();
-  const [phase, setPhase] = useState(0); // 0 build, 1 launch, 2 mission, 3 letter
   const celebrated = useRef(false);
-
-  useEffect(() => {
-    if (phase !== 3) {
-      celebrated.current = false;
-      return;
-    }
+  const [stats, setStats] = useState({ hints: 0, helped: [] });
+  const finishBuild = useCallback(() => {
     completeMachine(machineId);
     if (!celebrated.current) {
       celebrated.current = true;
       playMissionComplete();
     }
-  }, [phase, machineId, completeMachine, playMissionComplete]);
-  const [data, setData] = useState(null);
-  const [stats, setStats] = useState({ hints: 0, helped: [] });
-  const [round, setRound] = useState(0);
+    if (onBackToStory) onBackToStory();
+    else onExit?.();
+  }, [machineId, completeMachine, playMissionComplete, onExit, onBackToStory]);
 
   const log = {
     hint: () => setStats((s) => ({ ...s, hints: s.hints + 1 })),
     help: (l) => setStats((s) => (s.helped.includes(l) ? s : { ...s, helped: [...s.helped, l] })),
-  };
-  const replay = () => {
-    setData(null);
-    setStats({ hints: 0, helped: [] });
-    setPhase(0);
-    setRound((r) => r + 1);
   };
 
   return (
@@ -669,30 +708,22 @@ export default function MissionGame({ machineId, onExit }) {
     >
       <div className="mx-auto max-w-5xl pb-24">
         <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <ol className="flex flex-wrap gap-2 text-base">
-            {UI.steps.map((label, k) => (
-              <li
-                key={label}
-                aria-current={k === phase ? "step" : undefined}
-                className="rounded-full px-3 py-1"
-                style={{
-                  background: k === phase ? T.gold : "transparent",
-                  color: k === phase ? T.ink : T.cream,
-                  border: `2px solid ${k === phase ? T.ink : "#ffffff55"}`,
-                  fontWeight: k === phase ? 700 : 500,
-                }}
-              >
-                {label}
-              </li>
-            ))}
-          </ol>
-          {onExit && phase < 3 && <button type="button" onClick={onExit} className="text-base underline underline-offset-4">{UI.exit}</button>}
+          <p className="text-base font-bold">{UI.steps[0]}</p>
+          <div className="flex flex-wrap items-center gap-4">
+            {onBackToStory ? (
+              <button type="button" onClick={onBackToStory} className="text-base underline underline-offset-4">
+                Back to story
+              </button>
+            ) : null}
+            {onExit ? (
+              <button type="button" onClick={onExit} className="text-base underline underline-offset-4">
+                {UI.exit}
+              </button>
+            ) : null}
+          </div>
         </header>
 
-        {phase === 0 && <Build key={round} log={log} onDone={() => setPhase(1)} />}
-        {phase === 1 && <Launch onDone={() => setPhase(2)} />}
-        {phase === 2 && <Mission log={log} onDone={(d) => { setData(d); setPhase(3); }} />}
-        {phase === 3 && data && <Report data={data} stats={stats} onReplay={replay} onExit={onExit} />}
+        <Build log={log} onDone={finishBuild} config={config} />
       </div>
     </section>
   );

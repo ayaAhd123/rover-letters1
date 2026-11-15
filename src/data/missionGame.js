@@ -28,8 +28,8 @@ export const BUILD = {
     arm: "The arm hangs low on the left, near the wheels.",
     panels: "The solar panels spread out on the sides, like wings.",
   },
-  done: "Opp is built! Every part has a job, and now he is ready for Mars. Let's launch!",
-  launchButton: "Launch Opp to Mars",
+  done: "Opp is built! Every part has a job, and every piece is in the right place.",
+  finishButton: "Back to story",
   nextPart: "Next part",
   quiz: {
     camera: {
@@ -196,7 +196,7 @@ export const LETTER = {
 };
 
 export const UI = {
-  steps: ["Build", "Launch", "Mission Control", "Letter"],
+  steps: ["Build"],
   notebookTitle: "My scientist notebook",
   notebookEmpty: "Your notes will appear here.",
   print: "Print my letter",
