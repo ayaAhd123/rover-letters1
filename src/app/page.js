@@ -203,9 +203,17 @@ export default function Home() {
       )}
 
       {body && !item && body.id === "earth" && (
-        <p className="pointer-events-none absolute left-0 right-0 top-24 z-10 px-6 text-center text-sm font-semibold leading-snug text-white/90 md:text-base">
-          {t.earthEquipmentReminder}
-        </p>
+        <div
+          className="pointer-events-none absolute inset-x-0 z-10 flex justify-center px-6"
+          style={{ top: "calc(4.5rem + 10vh)", bottom: "48vh" }}
+        >
+          <p
+            className="m-auto max-w-2xl text-center text-base font-semibold leading-relaxed text-white md:text-lg"
+            style={{ textShadow: "0 2px 12px rgba(0,0,0,0.95)" }}
+          >
+            {t.earthEquipmentReminder}
+          </p>
+        </div>
       )}
 
       {body && !item && (
