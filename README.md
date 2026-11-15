@@ -10,9 +10,9 @@ Featured explorers: **Surveyor 3** and **Apollo** on the Moon; **Opportunity**, 
 
 ## Links
 
-- Live site: [(https://www.rover-letters.live/)]
-- Demo video: [(https://youtu.be/AZM1Y9jmTlw)]
-- Presentation: [(https://canva.link/0xyq7sbkpkkj8fz)]
+- Live site: [rover-letters.live](https://www.rover-letters.live/)
+- Demo video: [Watch on YouTube](https://youtu.be/AZM1Y9jmTlw)
+- Presentation: [View on Canva](https://canva.link/0xyq7sbkpkkj8fz)
 
 ## Installation
 
@@ -40,4 +40,4 @@ Aya Aoulad Ahmidou, Aya Elouahabi, RAQI Soultane and Mohamed Wassim El Ati.
 
 ## Credits
 
-Mission data, imagery and 3D models are sourced from NASA public resources. Rover Letters is an independent educational project and is not affiliated with or endorsed by NASA.
+Mission data, imagery and 3D models are sourced from NASA  resources. Rover Letters is an independent educational project and is not affiliated with or endorsed by NASA.
