@@ -36,6 +36,7 @@ export const SURVEYOR3_KIDS = {
     "Click the Moon, follow the green arrow to the safe pad, test the soil, and plant the flag beside Intrepid.",
   inviteYes: "Enter the crater",
   inviteNo: "Not now",
+  playGameLabel: "Play the crater game",
   themeColor: "#9ad8ff",
   landingSite: "Surveyor Crater, Oceanus Procellarum",
   landingDate: "April 20, 1967",

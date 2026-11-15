@@ -135,6 +135,96 @@ export const GLOSSARY = {
     definition:
       "The path a rover actually drives across the surface, measured and mapped by the mission team.",
   },
+  lander: {
+    label: "lander",
+    definition:
+      "A spacecraft designed to touch down on another world and work from the surface. Viking carried a lander plus a separate orbiter.",
+  },
+  aeroshell: {
+    label: "aeroshell",
+    definition:
+      "A protective heat shield and back shell that surround a lander during the fiery trip through a planet’s atmosphere.",
+  },
+  facsimileCamera: {
+    label: "facsimile camera",
+    definition:
+      "Viking’s scanning camera that built images line by line, similar to how an old fax machine draws a picture.",
+  },
+  panorama: {
+    label: "panorama",
+    definition:
+      "A wide view stitched from many photos, so you can see the landscape in almost every direction at once.",
+  },
+  rtg: {
+    label: "radioisotope thermoelectric generator (RTG)",
+    definition:
+      "A power source that turns heat from radioactive decay into electricity—handy when sunlight is weak or unreliable.",
+  },
+  seismometer: {
+    label: "seismometer",
+    definition:
+      "An instrument that detects shakes and rumbles in the ground, like a planet-sized earthquake detector.",
+  },
+  gcms: {
+    label: "gas chromatograph mass spectrometer",
+    definition:
+      "A lab instrument that separates chemicals in a sample and identifies them—Viking used one to hunt for organic molecules in soil.",
+  },
+  organicCompounds: {
+    label: "organic compounds",
+    definition:
+      "Carbon-based chemicals. Life on Earth depends on them, so scientists looked for traces in Martian soil—even a tiny amount would be a big clue.",
+  },
+  attitudeControl: {
+    label: "attitude control",
+    definition:
+      "The system that keeps a spacecraft pointed the right way. Orbiters use small thrusters; when propellant runs out, control is lost.",
+  },
+  softLanding: {
+    label: "soft landing",
+    definition:
+      "A gentle touchdown on another world, slow enough that the spacecraft does not crash or tip over.",
+  },
+  parkingOrbit: {
+    label: "parking orbit",
+    definition:
+      "A temporary path around Earth where a spacecraft waits before firing its engine again toward the Moon or another target.",
+  },
+  centaurUpperStage: {
+    label: "Centaur upper stage",
+    definition:
+      "A liquid-fuel rocket stage atop the Atlas booster. For Surveyor 3 it could restart in space after Earth orbit.",
+  },
+  descentRadar: {
+    label: "descent radar",
+    definition:
+      "A radar that measures height and speed while the lander falls. It tells the engine when to shut off near the surface.",
+  },
+  focalLength: {
+    label: "focal length",
+    definition:
+      "How wide or zoomed a camera lens is. A shorter focal length sees more area; a longer one sees a narrower, closer view.",
+  },
+  bearingTest: {
+    label: "bearing test",
+    definition:
+      "A push into the soil to see how much weight the ground can support — like checking if wet sand can hold your footprint.",
+  },
+  bearingStrength: {
+    label: "bearing strength",
+    definition:
+      "How much load the surface can carry before it sinks. Viking and Surveyor data helped prove lunar dust could hold a lander.",
+  },
+  lunarNight: {
+    label: "lunar night",
+    definition:
+      "About two Earth weeks of darkness on the Moon when that side faces away from the Sun. Cold and dark ended Surveyor’s solar power.",
+  },
+  eva: {
+    label: "EVA",
+    definition:
+      "Extravehicular activity — when astronauts leave their spacecraft in spacesuits to work on the surface.",
+  },
 };
 
 export function glossaryEntry(key) {

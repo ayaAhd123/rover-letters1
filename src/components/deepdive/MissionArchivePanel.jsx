@@ -139,7 +139,11 @@ function SectionArticle({ section, onTrigger, missionSources }) {
 }
 
 /** Scrollable mission archive with section observer → 3D sync. */
-export default function MissionArchivePanel({ sections, missionSources = DEFAULT_MISSION_SOURCES }) {
+export default function MissionArchivePanel({
+  sections,
+  missionSources = DEFAULT_MISSION_SOURCES,
+  modelFooter,
+}) {
   const scrollRef = useRef(null);
   const lastSectionRef = useRef(null);
   const {
@@ -216,7 +220,8 @@ export default function MissionArchivePanel({ sections, missionSources = DEFAULT
         ))}
 
         <p className="mission-model-footer">
-          3D model: NASA / JPL-Caltech. Camera positions are for storytelling, not exact measurements.
+          {modelFooter ??
+            "3D model: NASA / JPL-Caltech. Camera positions are for storytelling, not exact measurements."}
         </p>
 
         <section className="mission-documentation" aria-labelledby="mission-docs-title">

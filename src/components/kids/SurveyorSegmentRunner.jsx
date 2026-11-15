@@ -10,6 +10,7 @@ import { useRadioAudio } from "@/hooks/useRadioAudio";
 import { useKidsProgress } from "@/context/KidsProgressContext";
 import { STORY_CLIPS, QUIZ_AUDIO } from "@/data/kids/surveyor3Playback";
 import { SURVEYOR3_AUDIO } from "@/data/kids/surveyor3Audio";
+import { useDeepDive } from "@/components/deepdive/DeepDiveContext";
 
 function Mark({ children }) {
   return (
@@ -62,6 +63,22 @@ function PlayMark() {
   );
 }
 
+function GameMark() {
+  return (
+    <Mark>
+      <path
+        d="M7.5 9.5h9a3 3 0 0 1 3 3v3.5a2.5 2.5 0 0 1-2.5 2.5H7.5A2.5 2.5 0 0 1 5 16V12.5a3 3 0 0 1 3-3Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path d="M8 12h.01M11.5 11.5v3M16 12h.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M8 8.5V7a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v1.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </Mark>
+  );
+}
+
 function WaveBars({ level, active }) {
   return (
     <div className="s3-comms-wave" aria-hidden={!active}>
@@ -87,7 +104,9 @@ export default function SurveyorSegmentRunner({
     useKidsProgress();
   const radio = useRadioAudio();
   const { playClip, speakRadio, pauseClip, resumeClip, stopRadio } = radio;
+  const { open: openDeepDive, registerOnClose, isOpen: archiveOpen } = useDeepDive();
   const [paused, setPaused] = useState(false);
+  const [archivePaused, setArchivePaused] = useState(false);
   const [phase, setPhase] = useState("lines");
   const [lineCursor, setLineCursor] = useState(0);
   const [followLine, setFollowLine] = useState("");
@@ -100,12 +119,34 @@ export default function SurveyorSegmentRunner({
 
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
+  const pausedBeforeArchive = useRef(false);
+
+  useEffect(() => {
+    registerOnClose(() => {
+      setArchivePaused(false);
+      if (!pausedBeforeArchive.current) {
+        setPaused(false);
+        radio.resumeClip();
+      }
+    });
+  }, [registerOnClose, radio]);
+
+  const showReadMore =
+    phase === "lines" || phase === "question" || phase === "follow" || phase === "ready";
+
+  const onReadMore = () => {
+    pausedBeforeArchive.current = paused;
+    setArchivePaused(true);
+    setPaused(true);
+    radio.pauseClip();
+    openDeepDive("surveyor-3");
+  };
 
   const storyRun = useRef(0);
   const quizStarted = useRef("");
 
   useEffect(() => {
-    if (!ready || phase !== "lines" || !segment || paused) return undefined;
+    if (!ready || phase !== "lines" || !segment || paused || archivePaused) return undefined;
     const blocks = STORY_CLIPS[segment.id];
     if (!blocks?.length) return undefined;
 
@@ -132,7 +173,7 @@ export default function SurveyorSegmentRunner({
       cancelled = true;
       stopRadio();
     };
-  }, [ready, segment?.id, phase, paused, playClip, stopRadio]);
+  }, [ready, segment?.id, phase, paused, archivePaused, playClip, stopRadio]);
 
   useEffect(() => {
     if (paused) pauseClip();
@@ -144,13 +185,13 @@ export default function SurveyorSegmentRunner({
   }, [phase]);
 
   useEffect(() => {
-    if (!ready || phase !== "question" || !segment || paused) return undefined;
+    if (!ready || phase !== "question" || !segment || paused || archivePaused) return undefined;
     if (quizStarted.current === segment.id) return undefined;
     const src = QUIZ_AUDIO[segment.id];
     if (!src) return undefined;
     quizStarted.current = segment.id;
     void playClip(src);
-  }, [ready, phase, segment?.id, paused, playClip]);
+  }, [ready, phase, segment?.id, paused, archivePaused, playClip]);
 
   useEffect(() => {
     if (!ready || phase !== "follow" || !followLine || paused) return undefined;
@@ -262,7 +303,17 @@ export default function SurveyorSegmentRunner({
 
   const toggleComms = () => {
     radio.setCommsOn((v) => !v);
-    if (radio.commsOn) stop();
+    if (radio.commsOn) stopRadio();
+  };
+
+  const playGameLabel =
+    typeof machine.playGameLabel === "string" ? machine.playGameLabel : "Play the crater game";
+
+  const goToGame = () => {
+    setPaused(false);
+    stopRadio();
+    storyRun.current += 1;
+    setPhase("game");
   };
 
   const mood =
@@ -288,6 +339,7 @@ export default function SurveyorSegmentRunner({
     <div className="kids-seg kids-seg--on-mars kids-seg--on-moon">
       <div className="kids-mars-fade" aria-hidden="true" />
 
+      {!archiveOpen ? (
       <header className="kids-seg-top">
         <button type="button" className="kids-icon-btn" onClick={onExit} aria-label="Back to Moon map">
           ← Moon
@@ -306,6 +358,20 @@ export default function SurveyorSegmentRunner({
         </div>
 
         <div className="kids-top-actions">
+          {showReadMore ? (
+            <button type="button" className="kids-btn kids-btn-ghost kids-read-more" onClick={onReadMore}>
+              Read more
+            </button>
+          ) : null}
+          <button
+            type="button"
+            className="kids-nav-icon"
+            onClick={goToGame}
+            aria-label={playGameLabel}
+            title={playGameLabel}
+          >
+            <GameMark />
+          </button>
           <button
             type="button"
             className={`s3-comms-toggle s3-comms-toggle--mars-bar${radio.commsOn ? " is-on" : ""}`}
@@ -327,6 +393,7 @@ export default function SurveyorSegmentRunner({
           </button>
         </div>
       </header>
+      ) : null}
 
       <AnimatePresence mode="wait">
         {phase === "invite" ? (

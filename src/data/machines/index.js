@@ -34,8 +34,8 @@ export const MACHINES = {
   },
   "surveyor-3": {
     id: "surveyor-3",
-    name: "Surveyor 3",
-    subtitle: "Surveyor 3 & Apollo 12 · same crater",
+    name: "Surveyor 3 & Apollo 12",
+    subtitle: "Oceanus Procellarum · same crater mission",
     planetId: "moon",
     lat: -3.02,
     lon: -23.42,

@@ -6,14 +6,19 @@ import dynamic from "next/dynamic";
 import { useGLTF } from "@react-three/drei";
 import opportunitySections, { MISSION_SOURCES as OPP_SOURCES } from "@/data/opportunityDeepDive";
 import ingenuitySections, { MISSION_SOURCES as GINNY_SOURCES } from "@/data/ingenuityDeepDive";
+import vikingSections, { MISSION_SOURCES as VIKING_SOURCES } from "@/data/vikingDeepDive";
+import surveyorSections, { MISSION_SOURCES as SURVEYOR_SOURCES } from "@/data/surveyor3DeepDive";
 import { useDeepDive } from "./DeepDiveContext";
 import MissionArchivePanel from "./MissionArchivePanel";
 import { MODEL_URL } from "./RoverModel";
 import { INGENUITY_MODEL_URL } from "./IngenuityArchiveModel";
+import { VIKING_MODEL_URL } from "./VikingArchiveModel";
 import "./mission-archive.css";
 
 const DeepDiveScene = dynamic(() => import("./DeepDiveScene"), { ssr: false });
 const IngenuityDeepDiveScene = dynamic(() => import("./IngenuityDeepDiveScene"), { ssr: false });
+const VikingDeepDiveScene = dynamic(() => import("./VikingDeepDiveScene"), { ssr: false });
+const SurveyorPhotoArchiveScene = dynamic(() => import("./SurveyorPhotoArchiveScene"), { ssr: false });
 
 const ARCHIVE_META = {
   opportunity: {
@@ -41,6 +46,35 @@ const ARCHIVE_META = {
     sections: ingenuitySections,
     sources: GINNY_SOURCES,
     Scene: IngenuityDeepDiveScene,
+  },
+  viking: {
+    loadingId: "Mars · Viking 1 · Archive",
+    loadingTitle: "Loading Viking lander",
+    loadingCopy:
+      "Opening the Viking 1 lander model. The mission archive loads once the 3D file is ready.",
+    ariaLabel: "Viking 1 mission archive",
+    headerId: "Mars · Viking 1 · Archive",
+    plaque: "Viking lander 3D model — NASA / JPL-Caltech heritage",
+    modelUrl: VIKING_MODEL_URL,
+    sections: vikingSections,
+    sources: VIKING_SOURCES,
+    Scene: VikingDeepDiveScene,
+    modelFooter:
+      "3D model: Viking lander (interactive file). Camera positions are for storytelling, not exact measurements.",
+  },
+  "surveyor-3": {
+    loadingId: "Moon · Surveyor 3 · Archive",
+    loadingTitle: "Loading mission photos",
+    loadingCopy: "Opening NASA Surveyor 3 and Apollo 12 photography for the mission archive.",
+    ariaLabel: "Surveyor 3 mission archive",
+    headerId: "Moon · Surveyor 3 · Archive",
+    plaque: "NASA mission photography — Surveyor 3 & Apollo 12",
+    modelUrl: null,
+    sections: surveyorSections,
+    sources: SURVEYOR_SOURCES,
+    Scene: SurveyorPhotoArchiveScene,
+    modelFooter:
+      "Photography: NASA. The large image on the left follows the chapter you scroll.",
   },
 };
 
@@ -75,7 +109,7 @@ export default function DeepDive() {
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen || !meta.modelUrl) return;
     useGLTF.preload(meta.modelUrl);
   }, [isOpen, meta.modelUrl]);
 
@@ -131,7 +165,11 @@ export default function DeepDive() {
               </button>
             </div>
           </header>
-          <MissionArchivePanel sections={meta.sections} missionSources={meta.sources} />
+          <MissionArchivePanel
+            sections={meta.sections}
+            missionSources={meta.sources}
+            modelFooter={meta.modelFooter}
+          />
         </div>
       </div>
     </div>,

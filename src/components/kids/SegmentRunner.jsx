@@ -13,6 +13,7 @@ import { useKidsProgress } from "@/context/KidsProgressContext";
 import { useDeepDive } from "@/components/deepdive/DeepDiveContext";
 import { MODEL_URL } from "@/components/deepdive/RoverModel";
 import { INGENUITY_MODEL_URL } from "@/components/deepdive/IngenuityArchiveModel";
+import { VIKING_MODEL_URL } from "@/components/deepdive/VikingArchiveModel";
 import { useGLTF } from "@react-three/drei";
 import { t } from "@/data/kids/text";
 import { useProgress } from "@/store/progress";
@@ -313,19 +314,22 @@ export default function SegmentRunner({ machine, onExit }) {
 
   const isOpp = machine.id === "opportunity";
   const isGinny = machine.id === "ingenuity";
+  const isViking = machine.id === "viking-1";
   const showReadMore =
-    (isOpp || isGinny) && (phase === "lines" || phase === "follow" || phase === "question");
+    (isOpp || isGinny || isViking) && (phase === "lines" || phase === "follow" || phase === "question");
 
   const onReadMore = () => {
-    openDeepDive(isGinny ? "ingenuity" : "opportunity");
+    const kind = isGinny ? "ingenuity" : isViking ? "viking" : "opportunity";
+    openDeepDive(kind);
     setDeepDivePaused(true);
     voice.pausePlayback();
   };
 
   useEffect(() => {
     if (!showReadMore) return;
-    useGLTF.preload(isGinny ? INGENUITY_MODEL_URL : MODEL_URL);
-  }, [showReadMore, isGinny]);
+    const url = isGinny ? INGENUITY_MODEL_URL : isViking ? VIKING_MODEL_URL : MODEL_URL;
+    useGLTF.preload(url);
+  }, [showReadMore, isGinny, isViking]);
 
   const Character =
     machine.id === "ingenuity" ? Ingenuity : machine.id === "viking-1" ? Viking : Opportunity;

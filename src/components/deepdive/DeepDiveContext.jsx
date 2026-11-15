@@ -52,7 +52,15 @@ export function DeepDiveProvider({ children }) {
   }, []);
 
   const open = useCallback((kind = "opportunity") => {
-    setArchiveKind(kind === "ingenuity" ? "ingenuity" : "opportunity");
+    const resolved =
+      kind === "ingenuity"
+        ? "ingenuity"
+        : kind === "viking"
+          ? "viking"
+          : kind === "surveyor-3"
+            ? "surveyor-3"
+            : "opportunity";
+    setArchiveKind(resolved);
     setActiveSectionId("introduction");
     setActiveTrigger(null);
     setUserCameraActive(false);

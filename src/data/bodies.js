@@ -28,8 +28,8 @@ export const BODIES = [
     equipment: [
       {
         id: "surveyor-3",
-        name: "Surveyor 3",
-        subtitle: "Surveyor 3 & Apollo 12 · Oceanus Procellarum",
+        name: "Surveyor 3 & Apollo 12",
+        subtitle: "Oceanus Procellarum · 1967–1969",
         lang: "en-US",
         lat: -3.02,
         lon: -23.42,

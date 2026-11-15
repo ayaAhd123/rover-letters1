@@ -50,11 +50,14 @@ export default function KidsMode({
     >
       <KidsProgressProvider machineId={resolvedId} startAtBeginning>
         {surveyor ? (
-          <SurveyorSegmentRunner
-            machine={pack}
-            onExit={onClose}
-            onCompleteCelebration={onCompleteCelebration}
-          />
+          <DeepDiveProvider>
+            <SurveyorSegmentRunner
+              machine={pack}
+              onExit={onClose}
+              onCompleteCelebration={onCompleteCelebration}
+            />
+            <DeepDive />
+          </DeepDiveProvider>
         ) : (
           <DeepDiveProvider>
             <KidsStoryLayer
