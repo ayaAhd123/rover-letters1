@@ -9,16 +9,6 @@ export const CAPTIONS = {
     { start: 19, end: 21, text: "Every machine has a story." },
     { start: 21, end: 23, text: "Come and listen." },
   ],
-  ar: [
-    { start: 0.0, end: 4.0, text: "قبل سنوات طويلة، أرسلنا آلات إلى القمر وإلى المريخ." },
-    { start: 4.0, end: 6.4, text: "استكشفت، واكتشفت." },
-    { start: 6.4, end: 10.1, text: "وأرسلت لنا صور عوالم لم يرها أحد من قبل." },
-    { start: 10.1, end: 13.5, text: "ثم انتهت مهمتها، وبقيت هناك." },
-    { start: 13.5, end: 16.2, text: "وحيدة... وصامتة." },
-    { start: 16.2, end: 18.4, text: "لكنها ليست منسية." },
-    { start: 18.4, end: 20.6, text: "لكل آلة حكاية." },
-    { start: 20.6, end: 23.8, text: "تعالَ واستمع إليها." },
-  ],
 };
 
 export function captionAt(cues, time) {

@@ -13,10 +13,7 @@ import PlanetMapModal from "@/components/PlanetMapModal";
 import SfxToggle from "@/components/SfxToggle";
 import { useSpaceAudio } from "@/hooks/useSpaceAudio";
 
-const NARRATION = {
-  en: "/audio/narration-en.mp3",
-  ar: "/audio/narration-ar.mp3",
-};
+const NARRATION_SRC = "/audio/narration-en.mp3";
 
 const SpaceScene = dynamic(() => import("@/components/SpaceScene"), {
   ssr: false,
@@ -27,7 +24,7 @@ const KidsMode = dynamic(() => import("@/components/kids/KidsMode"), {
 });
 
 export default function Home() {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const [phase, setPhase] = useState("intro"); // "intro" | "flying" | "leaving" | "space"
   const [selected, setSelected] = useState(null);
   const [open, setOpen] = useState(null); // { bodyId, equipId }
@@ -92,7 +89,7 @@ export default function Home() {
   const playNarration = () => {
     const audio = narrationRef.current;
     if (!audio) return;
-    audio.src = NARRATION[lang] ?? NARRATION.en;
+    audio.src = NARRATION_SRC;
     audio.currentTime = 0;
     setNarrating(true);
     const play = audio.play();
@@ -138,7 +135,7 @@ export default function Home() {
           onSurfaceChange={handleSurfaceChange}
           paused={phase === "intro" || phase === "flying"}
           names={t.planets}
-          rtl={lang === "ar"}
+          rtl={false}
           onPlanetHover={spaceAudio.playPlanetHover}
           onApproachStart={spaceAudio.playWhoosh}
         />
@@ -270,11 +267,11 @@ export default function Home() {
       <audio
         ref={narrationRef}
         preload="auto"
-        src={NARRATION[lang] ?? NARRATION.en}
+        src={NARRATION_SRC}
         onEnded={() => setNarrating(false)}
       />
 
-      <Captions audioRef={narrationRef} lang={lang} active={narrating} />
+      <Captions audioRef={narrationRef} active={narrating} />
 
       {phase !== "space" && (
         <Intro phase={phase} onStart={startJourney} onFinish={finishIntro} onSkip={skipIntro} />

@@ -1,4 +1,4 @@
-import { Fraunces, Inter, Nunito, Share_Tech_Mono, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { Fraunces, Inter, Nunito, Share_Tech_Mono } from "next/font/google";
 import "./globals.css";
 import { LangProvider } from "@/context/LangContext";
 import { AudioPrefsProvider } from "@/context/AudioPrefsContext";
@@ -7,13 +7,6 @@ import { ProgressProvider } from "@/state/progress";
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  display: "swap",
-});
-
-const arabic = IBM_Plex_Sans_Arabic({
-  subsets: ["arabic"],
-  weight: ["400", "600", "700"],
-  variable: "--font-arabic",
   display: "swap",
 });
 
@@ -46,7 +39,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${nunito.variable} ${inter.variable} ${letterMono.variable} ${arabic.variable}`}
+      className={`${fraunces.variable} ${nunito.variable} ${inter.variable} ${letterMono.variable}`}
     >
       <body>
         <LangProvider>

@@ -1,6 +1,6 @@
 /**
  * Resolve UI text. Today: plain string.
- * Later: { en, ar, fr, darija } with a locale arg.
+ * Later: { en, fr } with a locale arg.
  */
 export function t(value, locale = "en") {
   if (value == null) return "";

@@ -2,9 +2,9 @@
 import { useEffect, useState } from "react";
 import { CAPTIONS, captionAt } from "@/data/captions";
 
-export default function Captions({ audioRef, lang, active }) {
+export default function Captions({ audioRef, active }) {
   const [text, setText] = useState("");
-  const cues = CAPTIONS[lang] ?? CAPTIONS.en;
+  const cues = CAPTIONS.en;
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -41,7 +41,7 @@ export default function Captions({ audioRef, lang, active }) {
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-20 z-[60] flex justify-center px-4 md:bottom-16">
       <p
-        dir={lang === "ar" ? "rtl" : "ltr"}
+        dir="ltr"
         className="max-w-3xl bg-black/80 px-5 py-3 text-center text-lg font-medium leading-snug text-white shadow-[0_8px_30px_rgba(0,0,0,0.45)] md:text-xl"
       >
         {text}

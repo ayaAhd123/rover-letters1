@@ -42,7 +42,7 @@ function Stars() {
 
 // phase: "intro" | "flying" | "leaving"
 export default function Intro({ phase, onStart, onFinish, onSkip }) {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const [loaded, setLoaded] = useState(false);
   const [waited, setWaited] = useState(false);
   const ready = loaded || waited;
@@ -64,14 +64,14 @@ export default function Intro({ phase, onStart, onFinish, onSkip }) {
       <div className="absolute inset-0">
         <SolarIntro
           flying={flying}
-          rtl={lang === "ar"}
+          rtl={false}
           onReady={() => setLoaded(true)}
           onEnd={onFinish}
         />
       </div>
 
       <div
-        className={`pointer-events-none absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent transition-opacity duration-700 rtl:bg-gradient-to-l ${
+        className={`pointer-events-none absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent transition-opacity duration-700 ${
           flying ? "opacity-0" : "opacity-100"
         }`}
       />

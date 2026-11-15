@@ -990,9 +990,6 @@ body {
   font-weight: 600;
 }
 
-html[dir="rtl"] body {
-  font-family: var(--font-arabic), var(--font-ui), Tahoma, Arial, sans-serif;
-}
 
 @keyframes twinkle {
   0%,

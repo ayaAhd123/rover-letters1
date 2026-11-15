@@ -1,5 +1,4 @@
 "use client";
-import LangSwitch from "@/components/LangSwitch";
 import "@/components/certificate/certificate.css";
 
 export function MapLogo({ className = "h-7 w-7" }) {
@@ -40,7 +39,6 @@ export default function SiteHeader({
               {certificateUnlocked ? "My Certificate" : "Preview Certificate"}
             </button>
           ) : null}
-          <LangSwitch />
         </div>
       </div>
     </header>
