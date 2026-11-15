@@ -12,6 +12,8 @@ export const STRINGS = {
     hint: "Tap a planet to explore",
     back: "Back to space",
     tapMarker: "Tap the glowing name on the planet to meet the equipment.",
+    earthEquipmentReminder:
+      "The equipment is on the Moon and Mars. Tap the Moon or Mars in space to visit each mission.",
     nowApproaching: "Now approaching",
     planets: {
       sun: "The Sun",
@@ -39,6 +41,8 @@ export const STRINGS = {
     hint: "المس كوكباً لتستكشفه",
     back: "العودة إلى الفضاء",
     tapMarker: "المس الاسم المضيء على الكوكب لتلتقي بالآلة.",
+    earthEquipmentReminder:
+      "المعدات على القمر وعلى المريخ. المس القمر أو المريخ في الفضاء لزيارة كل مهمة.",
     nowApproaching: "تقترب الآن من",
     planets: {
       sun: "الشمس",

@@ -207,6 +207,11 @@ export default function Home() {
           <div className="max-w-lg bg-black/70 p-5">
             <h1 className="text-3xl font-bold tracking-tight md:text-4xl">{body.name}</h1>
             <p className="mt-2 text-white/80">{body.tagline}</p>
+            {body.id === "earth" && (
+              <p className="mt-3 max-w-md text-sm font-medium leading-snug text-white/85">
+                {t.earthEquipmentReminder}
+              </p>
+            )}
             {body.equipment?.length > 0 && (
               <p className="mt-3 text-sm text-white/70">
                 {body.id === "mars"
