@@ -19,7 +19,7 @@ Featured explorers: **Surveyor 3** and **Apollo** on the Moon; **Opportunity**, 
 **Requirements:** Node.js 18 or later, and a browser with WebGL support.
 
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/ayaAhd123/rover-letters1.git
 cd rover-letters
 npm install
 npm run dev
