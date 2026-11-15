@@ -226,7 +226,7 @@ export default function Home() {
                 {body.id === "mars"
                   ? "Tap a machine on Mars to land and meet it."
                   : body.id === "moon"
-                    ? "Tap a mission pin — Surveyor 3 or Apollo 12 — to begin."
+                    ? "Tap Surveyor 3 — the story includes Apollo 12 landing beside the lander."
                     : t.tapMarker}
               </p>
             )}

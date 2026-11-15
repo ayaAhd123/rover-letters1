@@ -7,11 +7,20 @@ import { useAudioPrefs } from "@/context/AudioPrefsContext";
 const DEFAULT_RATE = 0.94;
 const DEFAULT_PITCH = 0.92;
 
+let sharedSfxCtx = null;
+
 function getCtx() {
   if (typeof window === "undefined") return null;
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) return null;
   return new Ctx();
+}
+
+function getSharedSfxCtx() {
+  if (typeof window === "undefined") return null;
+  if (sharedSfxCtx?.state === "closed") sharedSfxCtx = null;
+  if (!sharedSfxCtx) sharedSfxCtx = getCtx();
+  return sharedSfxCtx;
 }
 
 /** Authentic-style Quindar tone (intro/outro beep). */
@@ -78,24 +87,16 @@ export function useRadioAudio({ enabled = true } = {}) {
     return () => {
       cancelSpeech();
       if (waveTimer.current) clearInterval(waveTimer.current);
-      const ctx = ctxRef.current;
       ctxRef.current = null;
-      if (ctx && ctx.state !== "closed") {
-        void ctx.close().catch(() => {});
-      }
     };
   }, []);
 
   const ensureCtx = useCallback(() => {
     if (!sfxLive) return null;
-    if (!ctxRef.current) ctxRef.current = getCtx();
-    const ctx = ctxRef.current;
-    if (!ctx || ctx.state === "closed") {
-      ctxRef.current = getCtx();
-    }
-    const live = ctxRef.current;
-    if (live?.state === "suspended") void live.resume();
-    return live;
+    const ctx = getSharedSfxCtx();
+    ctxRef.current = ctx;
+    if (ctx?.state === "suspended") void ctx.resume();
+    return ctx;
   }, [sfxLive]);
 
   const startWave = useCallback(() => {

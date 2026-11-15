@@ -1,6 +1,6 @@
 /** Two-column layout matching the reference certificate. */
 const LEFT_IDS = ["surveyor-3", "opportunity", "viking-1"];
-const RIGHT_IDS = ["apollo-12", "ingenuity"];
+const RIGHT_IDS = ["ingenuity"];
 
 export function partitionMachinesForCert(machines) {
   const byId = new Map(machines.map((m) => [m.id, m]));

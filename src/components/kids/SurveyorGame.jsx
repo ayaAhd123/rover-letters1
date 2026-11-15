@@ -193,17 +193,13 @@ export default function SurveyorGame({ onExit, onCompleteCelebration }) {
   }, []);
 
   const onFlagPlanted = useCallback(() => {
-    setPhase((p) => {
-      if (p === "complete") return p;
-      if (!celebrated.current) {
-        celebrated.current = true;
-        completeMachine("surveyor-3");
-        onCompleteCelebration?.();
-        if (GAME_BEAT_AUDIO.flag) void radio.playClip(GAME_BEAT_AUDIO.flag);
-        else void radio.speakRadio(CALL.stage3Success);
-      }
-      return "complete";
-    });
+    if (celebrated.current) return;
+    celebrated.current = true;
+    setPhase("complete");
+    completeMachine("surveyor-3");
+    onCompleteCelebration?.();
+    if (GAME_BEAT_AUDIO.flag) void radio.playClip(GAME_BEAT_AUDIO.flag);
+    else void radio.speakRadio(CALL.stage3Success);
   }, [completeMachine, onCompleteCelebration, radio]);
 
   const plantFlag = useCallback(() => {

@@ -81,12 +81,12 @@ export default function SurveyorSegmentRunner({
   machine,
   onExit,
   onCompleteCelebration,
-  showApolloCompanion = false,
 }) {
   const reduceMotion = useReducedMotion();
   const { ready, segmentIndex, setSegmentIndex, completedSegments, markSegmentComplete, saveAnswer } =
     useKidsProgress();
   const radio = useRadioAudio();
+  const { playClip, speakRadio, pauseClip, resumeClip, stopRadio } = radio;
   const [paused, setPaused] = useState(false);
   const [phase, setPhase] = useState("lines");
   const [lineCursor, setLineCursor] = useState(0);
@@ -101,7 +101,6 @@ export default function SurveyorSegmentRunner({
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
-  const stop = radio.stopRadio;
   const storyRun = useRef(0);
   const quizStarted = useRef("");
 
@@ -118,7 +117,7 @@ export default function SurveyorSegmentRunner({
       let lineOffset = 0;
       for (const block of blocks) {
         if (cancelled || run !== storyRun.current) return;
-        await radio.playClip(block.src, {
+        await playClip(block.src, {
           lineCount: block.lineCount,
           onLineIndex: (local) => setLineCursor(lineOffset + local),
         });
@@ -131,14 +130,14 @@ export default function SurveyorSegmentRunner({
 
     return () => {
       cancelled = true;
-      stop();
+      stopRadio();
     };
-  }, [ready, segment?.id, phase, paused, radio, stop]);
+  }, [ready, segment?.id, phase, paused, playClip, stopRadio]);
 
   useEffect(() => {
-    if (paused) radio.pauseClip();
-    else radio.resumeClip();
-  }, [paused, radio]);
+    if (paused) pauseClip();
+    else resumeClip();
+  }, [paused, pauseClip, resumeClip]);
 
   useEffect(() => {
     if (phase !== "question") quizStarted.current = "";
@@ -149,30 +148,22 @@ export default function SurveyorSegmentRunner({
     if (quizStarted.current === segment.id) return undefined;
     const src = QUIZ_AUDIO[segment.id];
     if (!src) return undefined;
-    let cancelled = false;
-    const timer = window.setTimeout(() => {
-      if (cancelled) return;
-      quizStarted.current = segment.id;
-      void radio.playClip(src);
-    }, 80);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
-  }, [ready, phase, segment?.id, paused, radio]);
+    quizStarted.current = segment.id;
+    void playClip(src);
+  }, [ready, phase, segment?.id, paused, playClip]);
 
   useEffect(() => {
     if (!ready || phase !== "follow" || !followLine || paused) return undefined;
     let cancelled = false;
     (async () => {
-      await radio.speakRadio(followLine);
+      await speakRadio(followLine);
       if (!cancelled && phaseRef.current === "follow") setPhase("ready");
     })();
     return () => {
       cancelled = true;
-      stop();
+      stopRadio();
     };
-  }, [ready, phase, followLine, paused, radio, stop]);
+  }, [ready, phase, followLine, paused, speakRadio, stopRadio]);
 
   const invitePlayed = useRef(false);
   useEffect(() => {
@@ -181,9 +172,9 @@ export default function SurveyorSegmentRunner({
   useEffect(() => {
     if (phase !== "invite" || paused || invitePlayed.current) return undefined;
     invitePlayed.current = true;
-    void radio.playClip(SURVEYOR3_AUDIO.story.invite);
-    return () => stop();
-  }, [phase, paused, radio, stop]);
+    void playClip(SURVEYOR3_AUDIO.story.invite);
+    return () => stopRadio();
+  }, [phase, paused, playClip, stopRadio]);
 
   const finishSegment = useCallback(() => {
     if (segment && !completedSegments.includes(segment.id)) {
@@ -208,7 +199,7 @@ export default function SurveyorSegmentRunner({
 
   const goNextChapter = () => {
     setPaused(false);
-    stop();
+    stopRadio();
     if (segmentIndex >= segments.length - 1) {
       setPhase("invite");
       return;
@@ -221,7 +212,7 @@ export default function SurveyorSegmentRunner({
 
   const goPrevChapter = () => {
     setPaused(false);
-    stop();
+    stopRadio();
     if (phase === "invite") {
       setSegmentIndex(segments.length - 1);
       setLineCursor(0);
@@ -238,13 +229,13 @@ export default function SurveyorSegmentRunner({
   const skipVoice = () => {
     storyRun.current += 1;
     setPaused(false);
-    stop();
+    stopRadio();
     if (phase === "lines") setPhase("question");
     if (phase === "follow") finishSegment();
   };
 
   const advance = () => {
-    stop();
+    stopRadio();
     if (phase === "ready") {
       goNextChapter();
       return;
@@ -294,9 +285,8 @@ export default function SurveyorSegmentRunner({
   }
 
   return (
-    <div className="kids-seg kids-seg--on-moon">
-      <div className="kids-moon-horizon" aria-hidden="true" />
-      <div className="kids-moon-fade" aria-hidden="true" />
+    <div className="kids-seg kids-seg--on-mars kids-seg--on-moon">
+      <div className="kids-mars-fade" aria-hidden="true" />
 
       <header className="kids-seg-top">
         <button type="button" className="kids-icon-btn" onClick={onExit} aria-label="Back to Moon map">
@@ -370,9 +360,7 @@ export default function SurveyorSegmentRunner({
           >
             <p className="kids-mars-nametag">
               {segment.title}
-              {showApolloCompanion ? (
-                <span className="s3-companion-tag"> · Apollo 12 is in this same story</span>
-              ) : null}
+              <span className="s3-companion-tag"> · Apollo 12 (Intrepid) — same mission</span>
             </p>
 
             <div

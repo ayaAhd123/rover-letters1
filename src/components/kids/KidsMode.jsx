@@ -23,8 +23,7 @@ export default function KidsMode({
   onClose,
   onCompleteCelebration,
 }) {
-  const moonUnified = machineId === "apollo-12" || machineId === "surveyor-3";
-  const resolvedId = moonUnified ? "surveyor-3" : machineId;
+  const resolvedId = machineId === "apollo-12" ? "surveyor-3" : machineId;
   const pack = kidsPackFor(resolvedId);
 
   if (!pack) {
@@ -55,7 +54,6 @@ export default function KidsMode({
             machine={pack}
             onExit={onClose}
             onCompleteCelebration={onCompleteCelebration}
-            showApolloCompanion={machineId === "apollo-12"}
           />
         ) : (
           <DeepDiveProvider>

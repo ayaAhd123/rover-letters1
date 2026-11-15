@@ -174,18 +174,30 @@ function Terrain() {
     );
 }
 
+function MoonSky({ radius = 180 }) {
+    return (
+        <mesh raycast={() => null} renderOrder={-1}>
+            <sphereGeometry args={[radius, 48, 32]} />
+            <meshBasicMaterial color="#000000" side={THREE.BackSide} depthWrite={false} />
+        </mesh>
+    );
+}
+
 export default function MoonSurface() {
     return (
         <group>
+            <MoonSky radius={180} />
             <Stars
                 radius={200}
                 depth={120}
-                count={3200}
-                factor={4}
+                count={480}
+                factor={3}
                 saturation={0}
                 fade
-                speed={0.15}
+                speed={0.08}
             />
+
+            <fog attach="fog" args={["#000000", 12, 58]} />
 
             <directionalLight
                 position={[-20, 18, -14]}

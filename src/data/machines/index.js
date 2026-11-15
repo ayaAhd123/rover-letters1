@@ -1,7 +1,6 @@
 import { OPPORTUNITY_KIDS } from "@/data/kids/opportunity";
 import { INGENUITY_KIDS } from "@/data/kids/ingenuity";
 import { SURVEYOR3_KIDS } from "@/data/kids/surveyor3";
-import { APOLLO12_KIDS } from "@/data/kids/apollo12";
 import { VIKING_KIDS } from "@/data/kids/viking-kids";
 
 /** Central registry — map pins, kids data, and future machine components. */
@@ -36,7 +35,7 @@ export const MACHINES = {
   "surveyor-3": {
     id: "surveyor-3",
     name: "Surveyor 3",
-    subtitle: "Robotic lunar lander · Apr 1967",
+    subtitle: "Surveyor 3 & Apollo 12 · same crater",
     planetId: "moon",
     lat: -3.02,
     lon: -23.42,
@@ -45,19 +44,6 @@ export const MACHINES = {
     themeColor: "#9ad8ff",
     kids: SURVEYOR3_KIDS,
     experience: "surveyor-game",
-  },
-  "apollo-12": {
-    id: "apollo-12",
-    name: "Apollo 12 (Intrepid)",
-    subtitle: "Part of the Surveyor 3 Moon mission",
-    planetId: "moon",
-    lat: -3.01,
-    lon: -23.42,
-    mapX: 43,
-    mapY: 52,
-    themeColor: "#f5c451",
-    kids: APOLLO12_KIDS,
-    experience: "apollo-act-two",
   },
 };
 

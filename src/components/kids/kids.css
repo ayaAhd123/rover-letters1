@@ -1359,20 +1359,7 @@
 
 /* —— Moon / Surveyor 3 (same shell as Opportunity on Mars) —— */
 
-.kids-seg--on-moon {
-  background: transparent;
-}
-
-.kids-seg--on-moon::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: url("/textures/moon.jpg") center 22% / auto 118% no-repeat;
-  pointer-events: none;
-  transform: scale(1.02);
-  transform-origin: center 18%;
-}
+/* Moon story: transparent shell so 3D MoonSurface + black sky show through (same as Mars). */
 
 .kids-seg--on-moon .kids-seg-top,
 .kids-seg--on-moon .kids-seg-main,
@@ -1382,18 +1369,12 @@
   pointer-events: auto;
 }
 
-.kids-moon-fade {
-  position: absolute;
-  left: 0;
-  right: 0;
+.kids-seg--on-moon .kids-mars-fade {
   top: 42%;
-  bottom: 0;
-  z-index: 1;
-  pointer-events: none;
   background: linear-gradient(
     transparent 0%,
-    rgba(40, 40, 48, 0.28) 26%,
-    rgba(18, 18, 24, 0.78) 100%
+    rgba(36, 38, 44, 0.22) 28%,
+    rgba(10, 10, 14, 0.52) 100%
   );
 }
 
@@ -1560,26 +1541,13 @@
   color: #111;
 }
 
-.kids-mode--surveyor .s3-game:not(.s3-game--3d)::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: url("/textures/moon.jpg") center 38% / cover no-repeat;
-  pointer-events: none;
+.kids-mode--surveyor .s3-game:not(.s3-game--3d) {
+  background: transparent;
 }
 
+.kids-mode--surveyor .s3-game:not(.s3-game--3d)::before,
 .kids-mode--surveyor .s3-game:not(.s3-game--3d)::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    transparent 0%,
-    rgba(48, 48, 54, 0.28) 40%,
-    rgba(22, 22, 28, 0.72) 100%
-  );
+  content: none;
 }
 
 .kids-mode--surveyor .s3-game > * {

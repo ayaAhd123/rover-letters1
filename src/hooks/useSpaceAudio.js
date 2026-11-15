@@ -3,11 +3,20 @@
 import { useCallback, useRef } from "react";
 import { useAudioPrefs } from "@/context/AudioPrefsContext";
 
+let sharedUiCtx = null;
+
 function getCtx() {
   if (typeof window === "undefined") return null;
   const Ctx = window.AudioContext || window.webkitAudioContext;
   if (!Ctx) return null;
   return new Ctx();
+}
+
+function getSharedUiCtx() {
+  if (typeof window === "undefined") return null;
+  if (sharedUiCtx?.state === "closed") sharedUiCtx = null;
+  if (!sharedUiCtx) sharedUiCtx = getCtx();
+  return sharedUiCtx;
 }
 
 export function useSpaceAudio() {
@@ -16,8 +25,8 @@ export function useSpaceAudio() {
 
   const ensure = useCallback(() => {
     if (!sfxEnabled) return null;
-    if (!ctxRef.current) ctxRef.current = getCtx();
-    const ctx = ctxRef.current;
+    const ctx = getSharedUiCtx();
+    ctxRef.current = ctx;
     if (ctx?.state === "suspended") void ctx.resume();
     return ctx;
   }, [sfxEnabled]);
