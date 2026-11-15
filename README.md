@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Rover Letters
 
-## Getting Started
+An interactive space museum that brings the stories of NASA's forgotten explorers on the Moon and Mars back to life.
 
-First, run the development server:
+Designed for young learners, Rover Letters transforms complex NASA scientific data into immersive, child-friendly experiences. Children explore the Moon and Mars in 3D, meet retired spacecraft through narrated stories, discover NASA imagery and 3D models, and reinforce their knowledge through quizzes and hands-on building games. A personalized Memory Keeper Certificate celebrates each completed mission.
+
+Featured explorers: **Surveyor 3** and **Apollo** on the Moon; **Opportunity**, **Viking** and **Ingenuity** on Mars.
+
+> A mission may end, but its legacy lives on through the generations it inspires.
+
+## Links
+
+- Live site: [(https://www.rover-letters.live/)]
+- Demo video: [(https://youtu.be/AZM1Y9jmTlw)]
+- Presentation: [(https://canva.link/0xyq7sbkpkkj8fz)]
+
+## Installation
+
+**Requirements:** Node.js 18 or later, and a browser with WebGL support.
 
 ```bash
+git clone [your-repo-url]
+cd rover-letters
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app runs at `http://localhost:3000` by default.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+To create a production build:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm run start
+```
 
-## Learn More
+## Team
 
-To learn more about Next.js, take a look at the following resources:
+Aya Aoulad Ahmidou, Aya Elouahabi, RAQI Soultane and Mohamed Wassim El Ati.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Credits
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Mission data, imagery and 3D models are sourced from NASA public resources. Rover Letters is an independent educational project and is not affiliated with or endorsed by NASA.
